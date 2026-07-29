@@ -1,12 +1,12 @@
 # 07 — Build: export trigger in the table UI (busy + inline failure + download)
 type: build
-status: open
+status: merged
 blocked_by: 06
 charter_refs: §Scope-In(trigger; visible in-progress state; failure inline in the control's own state), §Scope-Out(no toasts/shortcuts/settings UI), §Silence-defaults(Visual: Button+Spinner, styles.css custom properties; Copy/aria patterns), §No-touch, §Priorities 1
 seams: S2 (existing component pattern; delta fixed by spec §Seams per D-0011/0012/0014): ToolbarProps grows exactly { onExport: () => void; exportStatus: 'idle' | 'exporting' | 'error' }; Button busy/aria-busy drive the in-progress state; error region is an ALWAYS-MOUNTED role="status" aria-live="polite" element at row-2 end whose text is "" or "Export failed"; Blob/object-URL/anchor/revoke wiring inline in App.tsx (D-0011 no new file). Consumes S1 via exportCsv only.
 touches: src/App.tsx, src/components/Toolbar.tsx, src/styles.css, src/components/Toolbar.test.tsx (new), src/App.export.test.tsx (new)
-attempts: 0/3
-pr: -
+attempts: 1/3
+pr: #6
 split_generation: 0
 
 ## What to build
@@ -46,3 +46,5 @@ by accessible name or within().
 
 ## Work log
 - 2026-07-29T04:40Z TICKETS: mergeability-skeptic pass ran (independence holds; finding 4: baseline tests survive the always-mounted status region — Button.test renders Button in isolation, App.test has no status-role queries; Button.tsx already ships ghost+busy, no Button edit needed; finding 6: big-but-atomic, do NOT split — R5/R6/R7 are one state machine; ~250–360 line diff estimate). Amendments applied: total = 80 pinned; oracle-ban guard exit-0 form. Wave note: #07 is the long pole — dispatch first in the wave.
+- 2026-07-29T06:51Z BUILD wave 2: worker built Toolbar.tsx (ToolbarProps seam S2, Export button, status region) + App.tsx (exportStatus state, handleExport with Blob/URL/anchor/deferred-revoke inline per D-0011) + Toolbar.test.tsx (T13/T15) + App.export.test.tsx (T14/T16/T17); T13/T15 genuine red->green (red evidence: missing-role failure, then busy-name-folds-with-Spinner failure fixed to match repo's own Button.test.tsx precedent of name:/Export/ under busy); T14/T16/T17 implementation landed in the same edit as T13/T15 because growing ToolbarProps broke App.tsx's compile — worker flagged this itself as a process deviation from strict one-test-at-a-time. T17 caught two real bugs during its own development: a test-isolation leak (unstubbed download chain surviving into later tests, fixed via a never-resolving retrigger promise) and a racy "not yet called" revoke assertion (fixed via call-order tracking). 3 commits (5fed6ad, b70be20, 0dbb33f). Fresh reviewer did NOT just trust the "went green on first write" claim — independently verified T14/T16/T17 are non-tautological and would catch the regressions the ticket cares about (pageRows-vs-sorted, stale error text, wrong Blob/anchor wiring) by mentally mutating the implementation; found Standards clean (1 non-blocking nit: styles.css in touches but left unmodified — no dedicated error-state CSS, no regression), Spec-faithfulness clean, 1 non-blocking test-quality gap (T17 proves click-before-revoke order, not literal setTimeout deferral). VERDICT PASS, 0 fix rounds. INTEGRATE gate: rebased onto origin/main (now including #08's merge) — clean, no conflicts; full local gate re-run (80/80 tests, typecheck 0, build 216k<=230, oracle guard clean, smoke still csv:ok); diff = exactly the ticket's touches (minus styles.css) + the two new test files, no no-touch/no baseline-test-file/no package.json changes. PR #6 opened, CI green (2/2 checks), squash-merged b6f5e5b. Remote branch deletion 403'd in-session (same known limitation) — left in place, cosmetic.
+- 2026-07-29T07:00Z FINISH: MAP fully closed (8/8 nodes merged/closed) with #07's merge; all 5 charter Done-when lines re-verified green against main@b6f5e5b; end-of-arc architecture checkpoint ran scoped to this arc's footprint, 3 findings all triaged Deferred to icebox.md (none Blocking, none met the Strong bar for a bounded-refactor ticket) -> arc status DONE.
