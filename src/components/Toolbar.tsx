@@ -11,6 +11,8 @@ export interface ToolbarProps {
   refreshing: boolean;
   matchCount: number;
   totalCount: number;
+  onExport: () => void;
+  exportStatus: 'idle' | 'exporting' | 'error';
 }
 
 function parseKm(value: string): number | null {
@@ -19,7 +21,14 @@ function parseKm(value: string): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-export function Toolbar({ onRefresh, refreshing, matchCount, totalCount }: ToolbarProps) {
+export function Toolbar({
+  onRefresh,
+  refreshing,
+  matchCount,
+  totalCount,
+  onExport,
+  exportStatus,
+}: ToolbarProps) {
   const filters = useTableStore((s) => s.filters);
   const setRouteText = useTableStore((s) => s.setRouteText);
   const setEffort = useTableStore((s) => s.setEffort);
@@ -121,6 +130,12 @@ export function Toolbar({ onRefresh, refreshing, matchCount, totalCount }: Toolb
         <Button variant="primary" busy={refreshing} onClick={onRefresh}>
           Refresh
         </Button>
+        <Button variant="ghost" busy={exportStatus === 'exporting'} onClick={onExport}>
+          Export
+        </Button>
+        <span className="toolbar-export-status" role="status" aria-live="polite">
+          {exportStatus === 'error' ? 'Export failed' : ''}
+        </span>
       </div>
     </div>
   );
