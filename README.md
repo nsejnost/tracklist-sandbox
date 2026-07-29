@@ -16,4 +16,5 @@ npm run dev        # start the dev server
 npm test           # run the test suite (vitest run)
 npm run typecheck  # tsc --noEmit
 npm run build      # production build to dist/
+node scripts/smoke-export.mjs  # real-path CSV export smoke test
 ```
