@@ -16,9 +16,10 @@ The async, chunked entry point the UI calls — the exact shape of the shipped `
 
 Pure/headless — no DOM. The download wiring (Blob, filename) lives in the UI ticket #05.
 
-## Acceptance (provisional — finalized at TICKETS from spec.md)
-- run: `npx vitest run src/export/xlsx`   expect: exit 0 — a test proves the arg-snapshot guarantee (mutating the input array after the call does not change output) and that the async result equals the synchronous `serializeXlsx` output for the same input.
+## Acceptance (final — TICKETS s05, from spec.md R4)
+- run: `npx vitest run src/export/xlsx`   expect: exit 0 — a test proves the arg-snapshot guarantee (mutating an input array after the call does not change the output) and that the async `exportXlsx` result equals the synchronous `serializeXlsx` output for the same input.
 - run: `npm run typecheck`   expect: exit 0
 
 ## Work log
 - 2026-07-30T04:19Z s02 (MAP): node created. Blocked by #03. Mirrors the proven exportCsv async/chunk/yield pattern; small wrapper → session-sized. Shared-vs-per-format status shape is a #05 concern (charter Type-2), not here.
+- 2026-07-30T06:15Z s05 (TICKETS): acceptance FINALIZED verbatim from spec R4. Grounded against `src/export/csv.ts` on main: mirror `ExportCsvOptions { chunkSize?: number }`, `DEFAULT_CHUNK_SIZE = 500`, sync arg-snapshot, `setTimeout(0)` macrotask yield — csv.ts is No-touch, so mirror the pattern, never import from it. Sizing: 1 seam, small wrapper → one session. Mergeability (skeptic F1): imports `serializeXlsx` (#03 in); unimported by app → merges green.

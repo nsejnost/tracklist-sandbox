@@ -13,10 +13,10 @@ A tiny, dependency-free ZIP container writer that packs already-serialized parts
 
 Independent of the OOXML content — it packs arbitrary named byte entries — so it is unit-testable in isolation against the ZIP byte layout from #01's note.
 
-## Acceptance (provisional — finalized at TICKETS from spec.md; anchored to charter Done-when)
-- run: `npx vitest run src/export/zip`   expect: exit 0, ≥ 5 assertions — CRC-32 matches known vectors; local+central headers well-formed; EOCD present with correct entry count; round-trippable by a standard unzip (structural check).
+## Acceptance (final — TICKETS s05, from spec.md R1)
+- run: `npx vitest run src/export/zip`   expect: exit 0, ≥ 5 assertions — CRC-32 matches the known vectors (`crc32("")=0x00000000`, `crc32("123456789")=0xCBF43926`); local + central headers well-formed and their shared fields (method, CRC, sizes, name) match; EOCD present with correct entry count; output's first 4 bytes are `50 4B 03 04`; one central-directory entry per input.
 - run: `npm run typecheck`   expect: exit 0
-- Seam contract: `zipStore` returns a byte stream whose first 4 bytes are the local-file-header signature `PK\x03\x04` and which contains one central-directory entry per input.
 
 ## Work log
 - 2026-07-30T04:19Z s02 (MAP): node created. Blocked by #01 (needs the verified stored-ZIP byte layout). One module, one seam → session-sized.
+- 2026-07-30T06:15Z s05 (TICKETS): acceptance FINALIZED verbatim from spec R1 (known CRC vectors inlined from spec Testing-decisions). Sizing: 1 module, 1 seam, 1 test file → comfortably one session. Mergeability (skeptic F1): imported by nobody until #03 → merges green in isolation. No fixes needed.
