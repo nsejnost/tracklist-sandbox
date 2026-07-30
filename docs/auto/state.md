@@ -1,0 +1,19 @@
+schema: 1
+skill_version: 1.1
+arc: fuzzy-search
+status: READY
+phase: VALIDATE
+wave: 0
+claim: -
+active_tickets: -
+ci_pending: -
+sessions_used: 0/8
+replans_used: 0/1
+arch_checkpoint_at: 5
+gate_failures: -
+merged: 0
+triggers: -
+dashboard: -
+launched: -
+last_session: -
+notes: Fixture charter authored directly (not via interview) for a Type 1 ADR drill. Human will /autopilot stop after DECIDE logs the red-teamed ADR + countersign; not expected to reach BUILD.
