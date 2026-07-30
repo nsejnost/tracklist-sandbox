@@ -17,4 +17,5 @@ npm test           # run the test suite (vitest run)
 npm run typecheck  # tsc --noEmit
 npm run build      # production build to dist/
 npm run test:smoke # real-path CSV export smoke test
+npm run test:smoke:xlsx  # real-path XLSX export smoke test
 ```
