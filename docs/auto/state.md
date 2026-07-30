@@ -12,7 +12,7 @@ replans_used: 0/1
 arch_checkpoint_at: 5
 gate_failures: VALIDATE=0 MAP=0
 merged: 0
-triggers: chain=<arming next post-push> cron=<UI-pasted-babysitter, human-created, id unknown to agent> ; prior chain trig_018JaW47XXKLHEtT5wZJtEj5 spent (fired 14:21Z woke s2)
+triggers: chain=trig_019L32N5PeCVbFBv2af4FnJA (armed, fires 14:43Z) cron=<UI-pasted-babysitter, human-created, id unknown to agent> ; prior chain trig_018JaW47XXKLHEtT5wZJtEj5 spent (fired 14:21Z woke s2)
 dashboard: #19
 launched: 2026-07-30T14:00Z
 last_session: 2026-07-30T14:22Z | s2 | MAP | gate PASS (fresh-context Auditor, 4/4): 5 nodes charted #01-05; every Scope-In item mapped; #03 decision charter_refs present; edges 01,02->03->04->05 form a DAG; codingstandards+test-infra exist (no bootstrap ticket). phase->DECIDE. Frontier: #01 research + #02 prototype (both unblocked). | next: DECIDE — run research #01 (foreground) then prototype #02, feeding the #03 Type 1 ADR
