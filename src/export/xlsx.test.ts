@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { ColumnDef } from '../types';
 import { COLUMNS } from '../utils/columns';
 import { makeSession } from '../test/factories';
-import { buildWorkbook, serializeXlsx } from './xlsx';
+import { buildWorkbook, exportXlsx, serializeXlsx } from './xlsx';
 
 const ZIP_MAGIC = [0x50, 0x4b, 0x03, 0x04];
 
@@ -134,5 +134,43 @@ describe('Unit', () => {
     const text = worksheetText(out);
     expect(text).toContain('<row r="1">');
     expect(text).toContain('<row r="2">');
+  });
+});
+
+function makeRows(count: number) {
+  return Array.from({ length: count }, (_, i) =>
+    makeSession({ id: i, routeName: `Route ${i}` }),
+  );
+}
+
+describe('Unit', () => {
+  it('resolves byte-identical to serializeXlsx for non-multiple chunk sizes on 10 rows', async () => {
+    const rows = makeRows(10);
+    const expected = serializeXlsx(rows, COLUMNS);
+    for (const chunkSize of [1, 3]) {
+      const actual = await exportXlsx(rows, COLUMNS, { chunkSize });
+      expect(Array.from(actual)).toEqual(Array.from(expected));
+    }
+  });
+
+  it('yields to the macrotask queue so a competitor queued via setTimeout(0) runs first', async () => {
+    const rows = makeRows(5);
+    let competitorRan = false;
+    const promise = exportXlsx(rows, COLUMNS, { chunkSize: 1 });
+    setTimeout(() => {
+      competitorRan = true;
+    }, 0);
+    await promise;
+    expect(competitorRan).toBe(true);
+  });
+
+  it('reflects the row array as it was at call time, ignoring later mutation', async () => {
+    const rows = makeRows(5);
+    const originalBytes = serializeXlsx(rows, COLUMNS);
+    const promise = exportXlsx(rows, COLUMNS, { chunkSize: 1 });
+    rows.push(makeSession({ id: 999, routeName: 'Late Addition' }));
+    rows.length = 0;
+    const resolved = await promise;
+    expect(Array.from(resolved)).toEqual(Array.from(originalBytes));
   });
 });
