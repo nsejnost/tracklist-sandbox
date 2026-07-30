@@ -1,6 +1,6 @@
 # 01 — Research: fuzzy-matching approaches — candidate library vs hand-rolled matcher
 type: research
-status: open
+status: merged
 blocked_by: -
 charter_refs: §Destination (the Type 1 matching-engine decision this run must resolve), §Scope-In (research a candidate fuzzy-search dependency against a hand-rolled matcher), §Silence-defaults (DEPENDENCY STANCE — at most ONE search-matching dep, only via a justified ADR; absent it, hand-roll), §Priorities (1 zero-regressions, 2 dep-free posture, 3 genuine fuzzy ranking), §Tech constraints (bundle ≤260; pinned versions; no build/config changes), §Done-when 4 (dist ≤260, baseline 220 → 40KB headroom)
 seams: - (research; no code)
@@ -23,3 +23,4 @@ De-risk the Type 1 matching-engine decision (#03) by pinning, from primary sourc
 
 ## Work log
 - 2026-07-30T14:22Z s2 (MAP): node created. type=research; no blockers; runs in the FOREGROUND during DECIDE (rails: research is never a background agent). Feeds the #03 Type 1 ADR alongside prototype #02.
+- 2026-07-30T14:44Z s3 (DECIDE): research DONE (foreground) → docs/auto/notes/fuzzy-matching-research.md. Primary sources: npm registry API (fuse.js 7.5.0 Apache-2.0 / fuzzysort 3.1.0 MIT / @leeoniya/ufuzzy 1.0.19 MIT — all 0-dep, all ship TS types); bundlephobia size API (Fuse.js min 17.7KB/gzip 6.1KB · fuzzysort min 7.7KB/gzip 3.2KB · uFuzzy min 8.3KB/gzip 3.9KB); fusejs.io scoring-theory (modified Bitap, score 0→1, 32-char term limit, weight+field-norm, threshold cutoff); fuzzysort + uFuzzy READMEs (subsequence models + bonuses). Key findings for #03: all 3 libs fit the ~40KB du headroom ON PAPER (raw-min adds ~17.3/7.7/8.3KB → est dist 237/228/228 ≤260), hand-roll adds ~1-3KB; uFuzzy README gates quality-sort to ≤1000 items (RED FLAG vs charter's 10k rows); Fuse.js most typo-tolerant (edit-distance) but heaviest, fuzzysort/uFuzzy order-preserving (subsequence); a hand-rolled subsequence+scoring ≍ fuzzysort's model, hand-rolled Levenshtein ≍ Fuse's tolerance. Acceptance: `test -f`✓; `grep -ci gzip`=7 (≥1)✓; the third acceptance (Auditor manual "every claim cites a primary source" gate) is deferred to DECIDE close (#03's Auditor). Foreground; no code merged. status→merged (node closed; the note is a coordination-branch artifact, nothing goes to main).
