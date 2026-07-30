@@ -1,7 +1,5 @@
 # CHARTER — xlsx-export
 
-STATUS: TEMPLATE — the charter interview removes this line; validation refuses to run while it is present.
-
 <!-- Authored by a human through the /autopilot charter interview on 2026-07-30
      (Renewal; prior arcs csv-export and smoke-gate archived under
      docs/auto/archive/). Read-only in run mode; amended only through the

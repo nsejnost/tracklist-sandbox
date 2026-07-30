@@ -168,5 +168,6 @@ AB: A — Push to auto/xlsx-export [CLICKED] (explicit permission granted)
 ## Full read-back
 Draft pushed to auto/xlsx-export with sentinel line present; printed verbatim in
 chat for the full-charter read-back.
-Confirmed by human: <pending — stamped on confirmation, then sentinel removed and
-state.md status:READY set>
+Confirmed by human: 2026-07-30T03:05Z — full-charter read-back confirmed against
+the pushed artifact (commit 242df1e); sentinel line then removed and state.md
+initialized with status: READY.
