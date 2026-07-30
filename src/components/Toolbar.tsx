@@ -11,8 +11,10 @@ export interface ToolbarProps {
   refreshing: boolean;
   matchCount: number;
   totalCount: number;
-  onExport: () => void;
-  exportStatus: 'idle' | 'exporting' | 'error';
+  onExportCsv: () => void;
+  csvStatus: 'idle' | 'exporting' | 'error';
+  onExportXlsx: () => void;
+  xlsxStatus: 'idle' | 'exporting' | 'error';
 }
 
 function parseKm(value: string): number | null {
@@ -26,8 +28,10 @@ export function Toolbar({
   refreshing,
   matchCount,
   totalCount,
-  onExport,
-  exportStatus,
+  onExportCsv,
+  csvStatus,
+  onExportXlsx,
+  xlsxStatus,
 }: ToolbarProps) {
   const filters = useTableStore((s) => s.filters);
   const setRouteText = useTableStore((s) => s.setRouteText);
@@ -130,11 +134,27 @@ export function Toolbar({
         <Button variant="primary" busy={refreshing} onClick={onRefresh}>
           Refresh
         </Button>
-        <Button variant="ghost" busy={exportStatus === 'exporting'} onClick={onExport}>
-          Export
+        <Button variant="ghost" busy={csvStatus === 'exporting'} onClick={onExportCsv}>
+          Export CSV
         </Button>
-        <span className="toolbar-export-status" role="status" aria-live="polite">
-          {exportStatus === 'error' ? 'Export failed' : ''}
+        <span
+          className="toolbar-export-status"
+          role="status"
+          aria-live="polite"
+          aria-label="CSV export status"
+        >
+          {csvStatus === 'error' ? 'Export failed' : ''}
+        </span>
+        <Button variant="ghost" busy={xlsxStatus === 'exporting'} onClick={onExportXlsx}>
+          Export XLSX
+        </Button>
+        <span
+          className="toolbar-export-status"
+          role="status"
+          aria-live="polite"
+          aria-label="XLSX export status"
+        >
+          {xlsxStatus === 'error' ? 'Export failed' : ''}
         </span>
       </div>
     </div>

@@ -9,13 +9,15 @@ import { Button } from './components/Button';
 import { Toolbar } from './components/Toolbar';
 import { ResultsTable } from './components/ResultsTable';
 import { exportCsv } from './export/csv';
+import { exportXlsx } from './export/xlsx';
 import type { RunSession } from './types';
 
 export default function App() {
   const [sessions, setSessions] = useState<RunSession[]>(() => generateSessions());
   const [refreshing, setRefreshing] = useState(false);
   const [page, setPage] = useState(0);
-  const [exportStatus, setExportStatus] = useState<'idle' | 'exporting' | 'error'>('idle');
+  const [csvStatus, setCsvStatus] = useState<'idle' | 'exporting' | 'error'>('idle');
+  const [xlsxStatus, setXlsxStatus] = useState<'idle' | 'exporting' | 'error'>('idle');
   const refreshTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const filters = useTableStore((s) => s.filters);
@@ -55,8 +57,8 @@ export default function App() {
     }, 400);
   };
 
-  const handleExport = () => {
-    setExportStatus('exporting');
+  const handleExportCsv = () => {
+    setCsvStatus('exporting');
     const viewRows = sorted;
     const viewColumns = columns;
     exportCsv(viewRows, viewColumns).then(
@@ -68,10 +70,36 @@ export default function App() {
         anchor.download = 'tracklist.csv';
         anchor.click();
         setTimeout(() => URL.revokeObjectURL(url), 0);
-        setExportStatus('idle');
+        setCsvStatus('idle');
       },
       () => {
-        setExportStatus('error');
+        setCsvStatus('error');
+      },
+    );
+  };
+
+  const handleExportXlsx = () => {
+    setXlsxStatus('exporting');
+    const viewRows = sorted;
+    const viewColumns = columns;
+    exportXlsx(viewRows, viewColumns).then(
+      (bytes) => {
+        // `exportXlsx` yields `Uint8Array<ArrayBufferLike>`; the DOM `BlobPart`
+        // type wants `ArrayBufferView<ArrayBuffer>`. The value is a valid Blob
+        // part at runtime — the mismatch is only the buffer's type parameter.
+        const blob = new Blob([bytes as BlobPart], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = 'tracklist.xlsx';
+        anchor.click();
+        setTimeout(() => URL.revokeObjectURL(url), 0);
+        setXlsxStatus('idle');
+      },
+      () => {
+        setXlsxStatus('error');
       },
     );
   };
@@ -87,8 +115,10 @@ export default function App() {
         refreshing={refreshing}
         matchCount={sorted.length}
         totalCount={sessions.length}
-        onExport={handleExport}
-        exportStatus={exportStatus}
+        onExportCsv={handleExportCsv}
+        csvStatus={csvStatus}
+        onExportXlsx={handleExportXlsx}
+        xlsxStatus={xlsxStatus}
       />
       <ResultsTable
         rows={pageRows}
