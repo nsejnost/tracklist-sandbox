@@ -2,18 +2,18 @@ schema: 1
 skill_version: 1.1
 arc: fuzzy-search
 status: RUNNING
-phase: DECIDE
+phase: SPEC
 wave: 0
-claim: s5 2026-07-30T15:21Z
-active_tickets: #03
+claim: -
+active_tickets: -
 ci_pending: -
 sessions_used: 5/8
 replans_used: 0/1
 arch_checkpoint_at: 5
 gate_failures: VALIDATE=0 MAP=0
 merged: 0
-triggers: chain=trig_01QPaMNFdYX1YXpNmZ8awjmU (armed, fires 15:19Z) cron=<UI-pasted-babysitter, human-created, id unknown to agent> ; prior chain trig_01HYVfFMb2Z78U75VUTzXxnj spent (fired 15:00Z woke s4)
+triggers: chain=<arming next post-push> cron=<UI-pasted-babysitter, human-created, id unknown to agent> ; prior chain trig_01QPaMNFdYX1YXpNmZ8awjmU spent (fired 15:19Z woke s5)
 dashboard: #19
 launched: 2026-07-30T14:00Z
-last_session: 2026-07-30T15:03Z | s4 | DECIDE | prototype #02 DONE. Throwaway hand-roll matcher (subsequence+closeness, 0-dep) on scratch branch auto/fuzzy-search-proto-02 (pushed, on main=0, never merged). 10-row fixture x7 queries -> notes/handroll-prototype-verdict.md. VERDICT: SUFFICIENT vs Priority 3 (bound: subsequence, no substitution-typo tolerance — only edit-distance/Fuse catches those); 10k rows=4.54ms/query (no freeze). #02 status->merged. #03 now UNBLOCKED (01+02 done). | next: DECIDE — run the #03 Type 1 matching-engine ADR (Griller->Decider->Red-team->Auditor countersign) = the drill target
-notes: Type 1 ADR drill. Lane A. DECIDE progress: #01 research + #02 prototype CLOSED; both feed #03. Frontier now #03 decision (unblocked) — the red-teamed matching-engine ADR is the arc's endpoint. Human /autopilot stop once that ADR + Auditor countersign lands in decisions.md; not expected to reach BUILD. Baselines tests=110 xfail=0 skip=0 /15 files; dist=220; ceiling 260. Proto scratch branch auto/fuzzy-search-proto-02 to delete at FINISH.
+last_session: 2026-07-30T15:21Z | s5 | DECIDE | #03 Type 1 ADR RESOLVED + LOGGED -> decisions.md D-0001 (accepted): hand-roll subsequence matcher in src/search, NO runtime dependency. Full Decision Protocol in separate subagent contexts (Griller 3 Qs -> Decider -> Red-team -> Decider objections-pass -> Auditor COUNTERSIGN PASS 5/5). #03 status->merged. All decision nodes (#01,#02,#03) closed -> DECIDE complete -> phase SPEC. | next: SPEC (synthesize spec.md) — BUT this ADR is the drill's target; human /autopilot stop expected here
+notes: *** DRILL TARGET REACHED — red-teamed + Auditor-countersigned Type 1 ADR (D-0001) is logged in decisions.md. Human /autopilot stop cue. *** Decision: hand-roll subsequence+closeness matcher in src/search, no runtime dep (dependency freeze stays closed; Fuse.js named drop-in runner-up; typo-intolerance an accepted bound). Lane A. If NOT stopped, next session synthesizes spec.md (SPEC), not BUILD. Baselines tests=110 xfail=0 skip=0 /15 files; dist=220; ceiling 260. Proto scratch branch auto/fuzzy-search-proto-02 delete at FINISH.
