@@ -2,9 +2,9 @@ schema: 1
 skill_version: 1.1
 arc: xlsx-export
 status: RUNNING
-phase: DECIDE
+phase: SPEC
 wave: 0
-claim: s03 2026-07-30T04:34Z
+claim: -
 active_tickets: -
 ci_pending: -
 sessions_used: 3/30
@@ -15,5 +15,5 @@ merged: 0
 triggers: chain=trig_01MCKWvdwzRD1XWyptbHLbka cron=<UI-pasted-babysitter, id unknown to agent>
 dashboard: #12
 launched: 2026-07-30T04:02Z
-last_session: 2026-07-30T04:27Z | s02 | MAP gate PASS (Auditor, fresh-context): 6 tickets, clean DAG, 0 decision nodes, no scope-creep; phase→DECIDE | next: run (DECIDE — research #01)
-notes: MAP passed. Map = 6 tickets (01 research xlsx-structure; 02 build zip; 03 build core; 04 build async; 05 build ui; 06 task smoke+ci). DAG 01→02→03→04→05, 06 parallel under 03. 0 decision tickets (charter pre-decided). DECIDE next: run research #01 in FOREGROUND → notes/xlsx-structure.md, close it; no decisions remain → advance to SPEC. 03/05/06 are TICKETS-phase split candidates. Lane A (self-bind chain + UI babysitter floor).
+last_session: 2026-07-30T04:38Z | s03 | DECIDE closed: research #01 DONE (notes/xlsx-structure.md, empirically verified minimal xlsx); 0 decisions; phase→SPEC | next: run (SPEC — synthesize spec.md)
+notes: DECIDE closed (pre-build frontier empty: #01 merged, 0 decisions). #01 note pins minimal 5-part OOXML set (styles/sharedStrings omitted), cell encoding VERIFIED via openpyxl (<v>=number, inlineStr=string), stored-ZIP layout + CRC32 (APPNOTE-cited); recommends inline strings for #03 (D-entry logged by #03). SPEC next: synthesize spec.md from map+charter+#01 note, name TDD seams (zipStore; buildWorkbook/serializeXlsx; exportXlsx; UI), executable acceptance per requirement, red-team, gate. pause_after_spec=false → TICKETS after gate. Lane A.

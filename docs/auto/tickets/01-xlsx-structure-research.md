@@ -1,6 +1,6 @@
 # 01 — Research: minimal valid .xlsx structure + dependency-free stored-ZIP byte layout
 type: research
-status: open
+status: merged
 blocked_by: -
 charter_refs: §Scope-In(dep-free ZIP+OOXML serializer, stored entries), §Silence-defaults(OOXML minimal parts; stored ZIP; hand-rolled CRC32), §Tech constraints(Uint8Array/TextEncoder/CRC32; no CompressionStream), §Priorities 1 (zero regressions — a malformed .xlsx is the arc's top risk)
 seams: - (research; no code)
@@ -23,3 +23,4 @@ Hand-rolling a valid `.xlsx` is the riskiest part of the arc; de-risk it before 
 
 ## Work log
 - 2026-07-30T04:19Z s02 (MAP): node created. Runs in the FOREGROUND during DECIDE (rails: research never a background agent). Feeds #02 and #03; no decision node depends on it (charter pre-decided the shape), so it closes by producing its note.
+- 2026-07-30T04:36Z s03 (DECIDE): research DONE → docs/auto/notes/xlsx-structure.md. Primary sources: PKWARE APPNOTE.TXT (§4.3.7/4.3.12/4.3.16/4.4.7 ZIP layout + CRC-32 0xEDB88320), Office Open XML anatomy + Brendan Long (minimal part set; styles/sharedStrings optional), ECMA-376 Parts 1&2. EMPIRICALLY VERIFIED in-container: hand-built minimal 5-part STORED xlsx → unzip -l lists 5 parts, zipfile testzip OK (CRC), and openpyxl (real reader) opened it reading A2=10.4 as float + B2 as str — proving the cell-typing contract at the format level (bare <v> = number; t="inlineStr" = string) and that no styles.xml/sharedStrings.xml is needed. Recommendation for #03: inline strings (smallest reversible; D-entry to be logged by #03). Acceptance: `test -f notes/xlsx-structure.md`✓; `grep -c Content_Types`✓. Foreground; no code merged (scratchpad verify script is throwaway). status→merged.
