@@ -38,3 +38,9 @@ future hardening arc should harvest them from there.
   (Speculative): a third shared seam `forEachChunkYielding(items, chunkSize, onChunk)` — the
   charter-sanctioned alternative to the forbidden xlsx→csv import. Requires editing no-touch
   csv.ts/xlsx.ts (frozen), so out of scope for this arc; harvest into a hygiene arc.
+
+## End-of-arc architecture pass — xlsx-export (FINISH, s10, 2026-07-30, main @ 45f2f09)
+Verdict NONE Blocking (all 5 Done-when green on main; deep modules zip.ts/xlsx-workbook.ts healthy; engine testable through its interface). F1/F2/F3 above re-confirmed unchanged. New:
+- [worth-exploring] N1 — intra-file sync/async twin in xlsx.ts: serializeXlsx and exportXlsx are structural twins differing only in data-row assembly (.map().join() vs chunked-yield); byte-identity is a hand-maintained invariant guarded only by the async≡sync test. Remedy: inject a chunk-yield strategy into one shared pipeline (shares F3's forEachChunkYielding idea but lands in TOUCHABLE xlsx.ts — less blocked than F3).
+- [speculative] N2 — exportXlsx async tail: the terminal packWorkbook (TextEncoder over whole ~3MB worksheet + per-byte crc32 over every entry + buffer copy) runs in ONE sync macrotask after the last yield. "No UI freeze at 10k" is reduced not eliminated (~10-35ms one-time tail, ~1-2 frames). Not a regression, not a Done-when miss (smoke validates sync path; async byte-equivalence unit-locked). Remedy (future): rolling per-chunk CRC + incremental encoding for true stream-freeness — unwarranted at this scale.
+- [monitor] Latent, non-actionable: escapeXml strips &/</> only (not XML-1.0-illegal control chars); number cells use String(value) (NaN/Infinity/exponential for pathological inputs); columnLetter has an untested >26-column branch. None reachable with the seeded finite fixtures; the first two are SHARED with the shipped CSV path (pre-existing, not this arc's regression). Next charter may consciously ignore or harden.

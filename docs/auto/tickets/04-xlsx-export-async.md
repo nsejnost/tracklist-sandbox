@@ -1,6 +1,6 @@
 # 04 — Async chunked exportXlsx wrapper
 type: build
-status: done
+status: merged
 blocked_by: 03
 charter_refs: §Scope-In(async chunked exportXlsx mirroring exportCsv; no UI freeze at 10k), §Silence-defaults(follow existing convention — the shipped exportCsv pattern), §No-touch(src/export/csv.ts frozen — mirror it, do not extract from it)
 seams: `src/export/xlsx.ts` — `exportXlsx(rows, columns, opts?): Promise<Uint8Array>`

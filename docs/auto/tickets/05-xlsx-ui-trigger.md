@@ -1,6 +1,6 @@
 # 05 — UI: second "Export XLSX" button beside relabeled "Export CSV"
 type: build
-status: closed
+status: merged
 blocked_by: 04
 charter_refs: §Scope-In(second Export XLSX button beside relabeled Export CSV; reuse busy/error status), §Silence-defaults(download tracklist.xlsx + MIME; Sheet1; shared busy/error pattern, one-field-vs-per-format = Type-2; terse labels; aria as precedented), §Priorities 1 (zero regressions to the shipped CSV export/table)
 seams: `Toolbar` props (export controls); `App` export orchestration (`handleExport*` + status state)

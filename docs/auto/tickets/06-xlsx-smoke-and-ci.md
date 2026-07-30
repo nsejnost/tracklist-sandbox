@@ -1,6 +1,6 @@
 # 06 — Real-path xlsx smoke script + CI/README/npm wiring
 type: task
-status: done
+status: merged
 blocked_by: 03
 charter_refs: §Done-when 5 (node scripts/smoke-export-xlsx.mjs → xlsx:ok rows=10000), §Scope-In(scripts/smoke-export-xlsx.mjs), §Merge&CI(wire into ci.yml + npm script + README line), §No-touch(ci.yml touchable ONLY for the appended step; scripts/smoke-export.mjs + resolve-ts-hook.mjs frozen)
 seams: `scripts/smoke-export-xlsx.mjs` (mirrors scripts/smoke-export.mjs); npm script `test:smoke:xlsx`; the one appended ci.yml step
