@@ -4,10 +4,10 @@ arc: fuzzy-search
 status: RUNNING
 phase: DECIDE
 wave: 0
-claim: -
-active_tickets: -
+claim: s5 2026-07-30T15:21Z
+active_tickets: #03
 ci_pending: -
-sessions_used: 4/8
+sessions_used: 5/8
 replans_used: 0/1
 arch_checkpoint_at: 5
 gate_failures: VALIDATE=0 MAP=0
