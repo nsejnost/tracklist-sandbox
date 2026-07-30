@@ -12,7 +12,7 @@ replans_used: 0/1
 arch_checkpoint_at: 5
 gate_failures: VALIDATE=0 MAP=0
 merged: 0
-triggers: chain=trig_01Q6ehDhqH8AEDhvz47R4fVe cron=<UI-pasted-babysitter, id unknown to agent>
+triggers: chain=trig_01MCKWvdwzRD1XWyptbHLbka cron=<UI-pasted-babysitter, id unknown to agent>
 dashboard: #12
 launched: 2026-07-30T04:02Z
 last_session: 2026-07-30T04:27Z | s02 | MAP gate PASS (Auditor, fresh-context): 6 tickets, clean DAG, 0 decision nodes, no scope-creep; phase→DECIDE | next: run (DECIDE — research #01)
