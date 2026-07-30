@@ -20,3 +20,21 @@ declared Node floor / engines field, CI push filter to stop double-runs, smoke
 robustness — quote-aware split, U+FEFF escape) live in
 docs/auto/archive/smoke-gate/icebox.md and are out of this feature arc's scope; a
 future hardening arc should harvest them from there.
+
+- 2026-07-30 | s09 arch-checkpoint (wave 4, notes/arch-wave4.md) | Duplicated download
+  seam + twin export handlers in App.tsx — `handleExportCsv`/`handleExportXlsx` are
+  structurally identical (object-URL → anchor → click → setTimeout(revoke,0) → status),
+  differing only in export fn/MIME/filename. Deferred: extract a `downloadBlob(part,
+  filename, mimeType)` helper (Strong) and optionally a `useExport({exportFn, filename,
+  mimeType})` hook folding the twin status state (Worth exploring). Not actioned this arc —
+  charter §Scope-Out routes arch findings to icebox and Priority 1 bars pre-FINISH churn of
+  a shipped control for polish. Candidate for a next hygiene arc.
+- 2026-07-30 | s09 arch-checkpoint (wave 4) | `ExportStatus` inline-union hoist — RE-CONFIRMED
+  (still open; first iceboxed at charter time above). Now written inline in 4 positions
+  (App.tsx ×2, Toolbar.tsx ×2) and re-declared in Toolbar.test.tsx. When a hygiene arc lifts
+  it, put `export type ExportStatus` in the export/hook module (types.ts is no-touch).
+- 2026-07-30 | s09 arch-checkpoint (wave 4) | Chunked-async driver duplicated between csv.ts
+  and xlsx.ts (DEFAULT_CHUNK_SIZE, yieldToMacrotaskQueue, snapshot, chunk-loop). Deferred
+  (Speculative): a third shared seam `forEachChunkYielding(items, chunkSize, onChunk)` — the
+  charter-sanctioned alternative to the forbidden xlsx→csv import. Requires editing no-touch
+  csv.ts/xlsx.ts (frozen), so out of scope for this arc; harvest into a hygiene arc.
