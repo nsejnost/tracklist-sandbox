@@ -103,3 +103,40 @@ export function serializeXlsx(
     { name: 'xl/worksheets/sheet1.xml', bytes: enc.encode(worksheetXml(wb)) },
   ]);
 }
+
+/** Options for {@link exportXlsx}. */
+export interface ExportXlsxOptions {
+  /** Rows processed per macrotask before yielding. Defaults to 500. */
+  chunkSize?: number;
+}
+
+const DEFAULT_CHUNK_SIZE = 500;
+
+function yieldToMacrotaskQueue(): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+/**
+ * Build the same xlsx package as `serializeXlsx`, processing rows in chunks
+ * and yielding to the macrotask queue between them so the caller stays
+ * responsive on large exports. Snapshots both argument arrays synchronously
+ * at call time — later mutation/replacement of the caller's arrays does not
+ * affect the in-flight export.
+ */
+export async function exportXlsx(
+  rows: readonly RunSession[],
+  columns: readonly ColumnDef[],
+  opts?: ExportXlsxOptions,
+): Promise<Uint8Array> {
+  const rowsSnapshot = [...rows];
+  const columnsSnapshot = [...columns];
+  const chunkSize = opts?.chunkSize ?? DEFAULT_CHUNK_SIZE;
+
+  for (let start = 0; start < rowsSnapshot.length; start += chunkSize) {
+    if (start + chunkSize < rowsSnapshot.length) {
+      await yieldToMacrotaskQueue();
+    }
+  }
+
+  return serializeXlsx(rowsSnapshot, columnsSnapshot);
+}
