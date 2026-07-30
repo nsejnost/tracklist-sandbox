@@ -4,10 +4,10 @@ arc: xlsx-export
 status: RUNNING
 phase: MAP
 wave: 0
-claim: -
+claim: s02 2026-07-30T04:19Z
 active_tickets: -
 ci_pending: -
-sessions_used: 1/30
+sessions_used: 2/30
 replans_used: 0/1
 arch_checkpoint_at: 5
 gate_failures: VALIDATE=0
