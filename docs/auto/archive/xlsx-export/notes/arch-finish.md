@@ -1,0 +1,18 @@
+# End-of-arc architecture pass — xlsx-export (FINISH, s10, 2026-07-30)
+Scope: the whole arc footprint (src/export/zip.ts, xlsx-workbook.ts, xlsx.ts + tests; src/App.tsx; src/components/Toolbar.tsx; scripts/smoke-export-xlsx.mjs; ci.yml). Fresh-context subagent. Main HEAD 45f2f09.
+
+## Verdict: NONE Blocking
+All 5 charter Done-when re-run verbatim on main pass (npm test 110; vitest src/export/xlsx 19; typecheck 0; build 0 + du 220≤240; xlsx:ok rows=10000); CSV smoke still `csv:ok rows=10000` (no regression); no-touch zones intact (csv.ts/types.ts/columns.ts unchanged; ci.yml = existing steps + one appended `npm run test:smoke:xlsx`; README = one sanctioned smoke line). Nothing threatens a Done-when or quality invariant.
+
+## Deep-module health + testability
+`zip.ts` and `xlsx-workbook.ts` are both genuinely deep and healthy — zip.ts hides CRC-32 + local/central/EOCD byte layout behind one `zipStore()`; xlsx-workbook.ts is the cell-typing policy / test oracle exercised through `buildWorkbook`, not internals. The engine is fully testable through its public interface (typing via buildWorkbook; OOXML bytes via serializeXlsx; async cadence + snapshot via exportXlsx; download/revoke via <App/>; cross-control busy isolation via <Toolbar/>). No pure function extracted only to dodge a hard call site.
+
+## Confirmation of wave-4 findings (all still valid, unchanged → remain iceboxed)
+- F1 duplicated download seam + twin handlers (App.tsx handleExportCsv/handleExportXlsx). Strong(helper)/Worth-exploring(hook).
+- F2 ExportStatus tri-state repeated inline (App.tsx ×2, Toolbar.tsx ×2, re-declared in Toolbar.test.tsx). Worth exploring; hoist must land in the export/hook module (types.ts no-touch).
+- F3 chunked-async driver duplicated csv.ts ↔ xlsx.ts. Speculative; blocked by no-touch csv.ts.
+
+## New findings (→ icebox for the next arc's charter; none actioned — scope frozen)
+- **N1 (Worth exploring)** — intra-file sync/async twin in `xlsx.ts`: `serializeXlsx` and `exportXlsx` are structural twins (both compose buildWorkbook→rowXml→headerRowXml→worksheetXml→packWorkbook), differing only in the data-row assembly (`.map().join()` vs chunked accumulate-with-yield); byte-identity is a hand-maintained invariant guarded solely by the async≡sync test. Remedy: express exportXlsx as the serializeXlsx pipeline with an injected chunk-yield strategy (shares F3's `forEachChunkYielding` idea but sits in TOUCHABLE xlsx.ts — a less-blocked refactor than F3).
+- **N2 (Speculative, non-blocking)** — `exportXlsx` async tail: the chunk loop yields during row-XML construction, but the terminal `packWorkbook` (TextEncoder.encode over the whole ~3MB worksheet + per-byte crc32 over every entry + full-buffer copy) runs in ONE synchronous macrotask after the last yield. So "no UI freeze at 10k" is reduced, not eliminated: ~10–35ms one-time tail (~1–2 frames), not a multi-second freeze. The yield-proof test only exercises a competitor scheduled DURING the loop, not the tail. Remedy (future only): rolling per-chunk CRC + incremental encoding for true stream-freeness — unwarranted at this scale.
+- **Latent / non-actionable (surfaced for honesty)** — `escapeXml` strips `&/</>` only (correct for element content) but not XML-1.0-illegal control chars; number cells use `String(value)` (would emit NaN/Infinity/exponential for pathological inputs); `columnLetter` has an untested >26-column branch. None reachable with the app's seeded finite fixtures (bounded distanceKm, fixed routeName set, ≤6 columns); the first two are SHARED with the already-shipped CSV path (pre-existing, not regressions). The next charter can consciously ignore or harden.
