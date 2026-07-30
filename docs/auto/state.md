@@ -3,17 +3,17 @@ skill_version: 1.1
 arc: xlsx-export
 status: RUNNING
 phase: BUILD
-wave: 0
-claim: s06 2026-07-30T07:16Z
-active_tickets: #02
+wave: 1
+claim: -
+active_tickets: -
 ci_pending: -
 sessions_used: 6/30
 replans_used: 0/1
 arch_checkpoint_at: 5
 gate_failures: VALIDATE=0 MAP=0 SPEC=0 TICKETS=0
-merged: 0
+merged: 1
 triggers: chain=NONE-ARMED(headless babysitter wake; re-arm via send_later denied w/o human per operations.md approval-reality; prior link trig_01MCKWvdwzRD1XWyptbHLbka spent) cron=<UI-pasted-babysitter, id unknown to agent>
 dashboard: #12
 launched: 2026-07-30T04:02Z
-last_session: 2026-07-30T06:15Z | s05 | TICKETS closed: 6 tickets finalized (acceptance verbatim from spec R1-R6), mergeability-skeptic pass ran (notes/tickets-skeptic.md, verdict yes-with-fixes; 3 fixes landed on #05), gate PASS (fresh-context Auditor, all 4 items + no-touch, verified vs live main); phase→BUILD | next: run (BUILD wave 1 — reconcile origin/main, frontier={#02,#03}, dispatch ≤max_parallel=2 workers in isolated worktrees, review, integrate serially)
-notes: TICKETS closed. All 6 tickets carry final acceptance (spec R1-R6 verbatim) + seams + touches; DAG confirmed acyclic (02←01, 03←01,02, 04←03, 05←04, 06←03; #01 merged). Sizing: #03 NOT split (frozen spec assigns R2+R3→#03; ~150-line coupled module; TOO_BIG tripwire is the BUILD backstop, split gen≤2), #06 NOT split (task ticket, 4 tiny cohesive wiring edits). Mergeability-skeptic (notes/tickets-skeptic.md): F1/F4/F5 hold; F2 (Export→Export CSV relabel breaks /Export/ regex queries in Toolbar/App tests — narrow to exact labels), F3 (single shared exportStatus flashes CSV button busy on XLSX click → Priority-1 trap → #05 rejects it, resolves per-control status), F6 (bundle ratchet reachable only at #05 where DCE first pulls the pipeline into dist → #05 acceptance adds build+du≤240; du gate NOT added to ci.yml per charter no-touch) — all fixed on #05. Two Type-2 forks still DEFERRED to BUILD: inline-strings D-# at #03; export-status-shape D-# at #05 (per-control, preserving Priority-1). BUILD frontier after #01 merged = {#02 zip, #03 core}; both new-file, disjoint touches → wave-1 pair, max_parallel=2. Ticket branches auto/xlsx-export-tNN cut from origin/main, worktree-isolated, TDD red→green at named seams, serial integrate w/ rebase+full local gate+squash-merge. Lane A. CHAIN LINK NOT ARMED (headless): send_later re-arm denied w/o human (operations.md approval-reality) → rely on hourly UI babysitter to pick up BUILD wave 1. State RUNNING+pushed → any wake continues cleanly.
+last_session: 2026-07-30T07:16Z | s06 | BUILD wave 1: #02 (stored-ZIP writer) built+reviewed+merged. Worker TDD 5 red→green cycles at `zipStore` seam; fresh-reviewer two-axis CLEAN/CLEAN (0 fix rounds); INTEGRATE full local gate GREEN (npm test 85/85 ratchet-up, typecheck 0, build 0 + du 216≤240, csv smoke ok, vitest zip 5/5, no-touch clean); PR #13 CI success → squash-merged (main d33f85f). Frontier corrected: prior "{#02,#03}" was a mislabel — #03 blocked_by 01,02 so it was NEVER co-frontier with #02. | next: run (BUILD wave 2 — frontier now {#03}, unblocked by #02 merge; #04←03, #06←03 stay blocked)
+notes: BUILD wave 1 DONE — #02 merged (PR #13, main d33f85f). merged=1, arch_checkpoint_at=5 (4 to go). Wave 2 frontier={#03 workbook model+OOXML serializer} ALONE (04,05,06 all still blocked on 03; 06←03 unblocks with 03). #03 carries a DEFERRED Type-2 fork to resolve in its worker: inline-strings-vs-sharedStrings → research note #01 §3 already recommends INLINE strings (smallest reversible, statelessly serializable) → log as the #03 D-entry. #03 seams: buildWorkbook(rows,columns) in-memory typed model + serializeXlsx(rows,columns):Uint8Array; uses zipStore (now on main). #03 is a split candidate (TOO_BIG is the backstop; spec froze R2+R3→#03, split gen≤2). No-touch reminder for #03: src/types.ts + src/utils/columns.ts read-only, src/export/csv.ts frozen. Leftover remote branch auto/xlsx-export-t02 (merged; proxy blocked its deletion from this headless session — harmless, human may delete). Lane A. CHAIN LINK NOT ARMED (headless: send_later re-arm denied w/o human per operations.md approval-reality) → hourly UI babysitter is the floor; picks up BUILD wave 2. State RUNNING+pushed → any wake continues cleanly.
