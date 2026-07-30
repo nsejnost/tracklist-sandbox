@@ -15,5 +15,5 @@ merged: 0
 triggers: -
 dashboard: -
 launched: -
-last_session: 2026-07-30T03:05Z | charter | RENEWAL interview | CHARTER.md finalized, sentinel removed, status READY | next: preflight
-notes: Renewal of csv-export->smoke-gate. Coord branch auto/xlsx-export. Prior lane verdict (smoke-gate): send_later scheduling denied all run (approval forced server-side); babysitter cron is the guaranteed floor. Re-run the canary at preflight/launch to confirm the lane before arming.
+last_session: 2026-07-30T03:07Z | preflight | PASS (baseline green in-container; PR access via #7/#10/#11 history; lane fast-pathed) | next: launch
+notes: Preflight PASS 2026-07-30. Lane asserted by human 2026-07-30 = Lane A (self-bind send_later chain, approval-forced + human-pasted hourly babysitter as the floor; automated Lane B unavailable on this account). Launch arms Lane A; canary optional at launch.
