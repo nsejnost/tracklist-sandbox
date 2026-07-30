@@ -1,7 +1,7 @@
 schema: 1
 skill_version: 1.1
 arc: xlsx-export
-status: READY
+status: RUNNING
 phase: VALIDATE
 wave: 0
 claim: -
@@ -13,7 +13,7 @@ arch_checkpoint_at: 5
 gate_failures: -
 merged: 0
 triggers: -
-dashboard: -
-launched: -
-last_session: 2026-07-30T03:07Z | preflight | PASS (baseline green in-container; PR access via #7/#10/#11 history; lane fast-pathed) | next: launch
-notes: Preflight PASS 2026-07-30. Lane asserted by human 2026-07-30 = Lane A (self-bind send_later chain, approval-forced + human-pasted hourly babysitter as the floor; automated Lane B unavailable on this account). Launch arms Lane A; canary optional at launch.
+dashboard: #12
+launched: 2026-07-30T04:02Z
+last_session: 2026-07-30T04:02Z | launch | dashboard #12 created, status RUNNING, launched stamped; arming Lane A first wake | next: run (VALIDATE)
+notes: Lane A (human-asserted 2026-07-30): self-bind send_later chain (approval-forced) + human-pasted hourly babysitter cron is the guaranteed floor; automated Lane B unavailable on this account. Babysitter is UI-created (agent-unreachable): terminal-state cleanup needs the human to delete it in the claude.ai Routines dashboard.
