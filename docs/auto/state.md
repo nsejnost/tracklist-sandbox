@@ -12,7 +12,7 @@ replans_used: 0/1
 arch_checkpoint_at: 5
 gate_failures: -
 merged: 0
-triggers: -
+triggers: chain=trig_01X1PgPJY32MdyCzSVKH6vp2 cron=<UI-pasted-babysitter, id unknown to agent>
 dashboard: #12
 launched: 2026-07-30T04:02Z
 last_session: 2026-07-30T04:02Z | launch | dashboard #12 created, status RUNNING, launched stamped; arming Lane A first wake | next: run (VALIDATE)
