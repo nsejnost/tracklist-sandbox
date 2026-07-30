@@ -143,7 +143,7 @@ function makeRows(count: number) {
   );
 }
 
-describe('exportXlsx', () => {
+describe('Unit', () => {
   it('resolves byte-identical to serializeXlsx for non-multiple chunk sizes on 10 rows', async () => {
     const rows = makeRows(10);
     const expected = serializeXlsx(rows, COLUMNS);

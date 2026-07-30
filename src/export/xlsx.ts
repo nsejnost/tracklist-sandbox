@@ -68,21 +68,38 @@ function rowXml(cells: readonly Cell[], rowNumber: number): string {
   return `<row r="${rowNumber}">${inner}</row>`;
 }
 
-/** Render the worksheet part (`sheet1.xml`) from the workbook model. */
-function worksheetXml(wb: Workbook): string {
-  const headerCells: readonly Cell[] = wb.header.map(
+/** Render the header `<row>` (row 1) from the worksheet header labels. */
+function headerRowXml(header: readonly string[]): string {
+  const headerCells: readonly Cell[] = header.map(
     (label): Cell => ({ kind: 'string', value: label }),
   );
-  const lines: string[] = [rowXml(headerCells, 1)];
-  wb.rows.forEach((cells, i) => {
-    lines.push(rowXml(cells, i + 2));
-  });
+  return rowXml(headerCells, 1);
+}
+
+/** Wrap the header row and accumulated data-row XML into the worksheet part. */
+function worksheetXml(headerRow: string, dataRows: string): string {
   return (
     `${XML_DECL}\n` +
     '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
-    `<sheetData>${lines.join('')}</sheetData>` +
+    `<sheetData>${headerRow}${dataRows}</sheetData>` +
     '</worksheet>'
   );
+}
+
+/**
+ * Assemble the five-part OOXML package around a worksheet part as UTF-8 and
+ * pack it into a stored-entry ZIP. The single source of truth for the output
+ * bytes, shared by `serializeXlsx` and `exportXlsx`.
+ */
+function packWorkbook(worksheet: string): Uint8Array {
+  const enc = new TextEncoder();
+  return zipStore([
+    { name: '[Content_Types].xml', bytes: enc.encode(CONTENT_TYPES) },
+    { name: '_rels/.rels', bytes: enc.encode(ROOT_RELS) },
+    { name: 'xl/workbook.xml', bytes: enc.encode(WORKBOOK_XML) },
+    { name: 'xl/_rels/workbook.xml.rels', bytes: enc.encode(WORKBOOK_RELS) },
+    { name: 'xl/worksheets/sheet1.xml', bytes: enc.encode(worksheet) },
+  ]);
 }
 
 /**
@@ -94,14 +111,8 @@ export function serializeXlsx(
   columns: readonly ColumnDef[],
 ): Uint8Array {
   const wb = buildWorkbook(rows, columns);
-  const enc = new TextEncoder();
-  return zipStore([
-    { name: '[Content_Types].xml', bytes: enc.encode(CONTENT_TYPES) },
-    { name: '_rels/.rels', bytes: enc.encode(ROOT_RELS) },
-    { name: 'xl/workbook.xml', bytes: enc.encode(WORKBOOK_XML) },
-    { name: 'xl/_rels/workbook.xml.rels', bytes: enc.encode(WORKBOOK_RELS) },
-    { name: 'xl/worksheets/sheet1.xml', bytes: enc.encode(worksheetXml(wb)) },
-  ]);
+  const dataRows = wb.rows.map((cells, i) => rowXml(cells, i + 2)).join('');
+  return packWorkbook(worksheetXml(headerRowXml(wb.header), dataRows));
 }
 
 /** Options for {@link exportXlsx}. */
@@ -132,11 +143,18 @@ export async function exportXlsx(
   const columnsSnapshot = [...columns];
   const chunkSize = opts?.chunkSize ?? DEFAULT_CHUNK_SIZE;
 
+  const header = buildWorkbook([], columnsSnapshot).header;
+  let dataRows = '';
+
   for (let start = 0; start < rowsSnapshot.length; start += chunkSize) {
+    const chunk = buildWorkbook(rowsSnapshot.slice(start, start + chunkSize), columnsSnapshot);
+    chunk.rows.forEach((cells, i) => {
+      dataRows += rowXml(cells, start + i + 2);
+    });
     if (start + chunkSize < rowsSnapshot.length) {
       await yieldToMacrotaskQueue();
     }
   }
 
-  return serializeXlsx(rowsSnapshot, columnsSnapshot);
+  return packWorkbook(worksheetXml(headerRowXml(header), dataRows));
 }
