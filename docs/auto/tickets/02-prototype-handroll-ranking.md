@@ -1,6 +1,6 @@
 # 02 — Prototype: hand-rolled fuzzy matcher — ranking quality on a known fixture
 type: prototype
-status: open
+status: merged
 blocked_by: -
 charter_refs: §Destination (hand-roll prototype is a named step of the Decision Protocol), §Scope-In (prototypes the hand-rolled option's ranking quality), §Priorities 3 (genuine fuzzy ranking, not just substring matching), §Glossary (fuzzy match = approximate match ranked by closeness, not exact/substring), §Silence-defaults (matches visible text columns, case-insensitive; empty query → full view; ties → existing sort order)
 seams: - (throwaway prototype; scratch branch auto/fuzzy-search-proto-02; NEVER merged; deleted at FINISH)
@@ -20,3 +20,4 @@ This is a **logic** prototype (the charter did NOT opt into UI prototypes and pr
 
 ## Work log
 - 2026-07-30T14:22Z s2 (MAP): node created. type=prototype (logic). No blockers; feeds the #03 Type 1 ADR alongside research #01. Runs in the foreground; verdict-only artifact to notes/, throwaway code to a proto scratch branch.
+- 2026-07-30T15:03Z s4 (DECIDE): prototype DONE. Throwaway hand-rolled matcher (subsequence gate + closeness scoring: adjacent/start-of-word/position/span bonuses; ~40 lines, 0 deps) committed to scratch branch auto/fuzzy-search-proto-02 (pushed; on main=0; never merged; delete at FINISH). Ran over a 10-row known fixture with 7 queries; ranked transcripts + verdict → docs/auto/notes/handroll-prototype-verdict.md. VERDICT: SUFFICIENT vs charter Priority 3 (with one honest bound) — hand-roll matches+ranks `rvr`/`mtn`/`cstl` that a pure substring filter MISSES, ranks best-match-first (start-of-word > mid-word), honors charter semantics (case-insensitive, empty→full, ties→existing order); 10k rows = 4.54 ms/full-scan query (no freeze, charter §Destination). Honest bound for the #03 red-team: subsequence is ORDER-PRESERVING → no substitution/transposition-typo tolerance; only edit-distance (Fuse.js Bitap) catches those. Acceptance: `test -f`✓; harness scratch-branch-only✓. status→merged (node closed). #03 now UNBLOCKED (01 + 02 both done) → next session runs the Type 1 ADR (the drill target).
