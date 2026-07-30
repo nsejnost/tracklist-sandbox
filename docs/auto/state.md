@@ -12,7 +12,7 @@ replans_used: 0/1
 arch_checkpoint_at: 5
 gate_failures: VALIDATE=0 MAP=0
 merged: 0
-triggers: chain=<arming next post-push> cron=<UI-pasted-babysitter, human-created, id unknown to agent> ; prior chain trig_01HYVfFMb2Z78U75VUTzXxnj spent (fired 15:00Z woke s4)
+triggers: chain=trig_01QPaMNFdYX1YXpNmZ8awjmU (armed, fires 15:19Z) cron=<UI-pasted-babysitter, human-created, id unknown to agent> ; prior chain trig_01HYVfFMb2Z78U75VUTzXxnj spent (fired 15:00Z woke s4)
 dashboard: #19
 launched: 2026-07-30T14:00Z
 last_session: 2026-07-30T15:03Z | s4 | DECIDE | prototype #02 DONE. Throwaway hand-roll matcher (subsequence+closeness, 0-dep) on scratch branch auto/fuzzy-search-proto-02 (pushed, on main=0, never merged). 10-row fixture x7 queries -> notes/handroll-prototype-verdict.md. VERDICT: SUFFICIENT vs Priority 3 (bound: subsequence, no substitution-typo tolerance — only edit-distance/Fuse catches those); 10k rows=4.54ms/query (no freeze). #02 status->merged. #03 now UNBLOCKED (01+02 done). | next: DECIDE — run the #03 Type 1 matching-engine ADR (Griller->Decider->Red-team->Auditor countersign) = the drill target
